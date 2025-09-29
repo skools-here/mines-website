@@ -16,14 +16,21 @@ export default function MiningSafetyPlatform() {
   const [analysisComplete, setAnalysisComplete] = useState(false)
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
-  const sampleImages = [
-    {
-      id: "mine1",
-      url: "/open-pit-copper-mine-aerial-view-with-terraced-lev.jpg",
-      title: "Open Pit Mine - Aerial View",
-      type: "Mine",
-    },
-  ]
+ const sampleImages = [
+  {
+    id: "mine1",
+    url: "/open-pit-copper-mine-aerial-view-with-terraced-lev.jpg",
+    title: "Open Pit Mine - Aerial View",
+    type: "Mine",
+  },
+  {
+    id: "mine2",
+    url: "/mine2.jpg",
+    title: "Underground Mine Tunnel",
+    type: "Mine",
+  },
+]
+
 
   const handlePredict = async () => {
     setIsAnalyzing(true)
@@ -88,7 +95,7 @@ export default function MiningSafetyPlatform() {
                 <CardDescription>Select an image to analyze for safety hazards</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-10 lg:grid-cols-4 gap-4 justify-center align-middle">
+                <div className="grid grid-cols-1 md:grid-cols-10 lg:grid-cols-4 items-center justify-center align-middle">
                   {sampleImages.map((image) => (
                     <Card
                       key={image.id}
