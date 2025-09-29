@@ -25,7 +25,7 @@ export default function MiningSafetyPlatform() {
   },
   {
     id: "mine2",
-    url: "/mine2.jpg",
+    url: "/mine_gray2.jpg",
     title: "Underground Mine Tunnel",
     type: "Mine",
   },
@@ -169,12 +169,17 @@ export default function MiningSafetyPlatform() {
 
             {/* Hardcoded Result Image */}
             <div className="aspect-[16/10] max-w-3xl mx-auto rounded-lg overflow-hidden shadow-lg">
-              <img
-                src="/mine.jpg"
-                alt="Analysis Result"
-                className="w-full h-full object-cover"
-              />
-            </div>
+  <img
+    src={
+      selectedImage === "/open-pit-copper-mine-aerial-view-with-terraced-lev.jpg"
+        ? "/mine.jpg"           // output for 1st image
+        : "/mine2.jpg"   // output for 2nd image
+    }
+    alt="Analysis Result"
+    className="w-full h-full object-cover"
+  />
+</div>
+
 
             {/* Graph Section */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
