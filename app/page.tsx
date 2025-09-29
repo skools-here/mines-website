@@ -2,15 +2,14 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { HeatmapVisualization } from "@/components/heatmap-visualization"
-import { SafetyMetrics } from "@/components/safety-metrics"
-import { RiskAnalysisCharts } from "@/components/risk-analysis-charts"
-import { AlertTriangle, Shield, Activity, MapPin, Zap } from "lucide-react"
+import { Shield, Activity, MapPin, Zap } from "lucide-react"
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  BarChart, Bar
+} from "recharts"
 
 export default function MiningSafetyPlatform() {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -19,37 +18,16 @@ export default function MiningSafetyPlatform() {
 
   const sampleImages = [
     {
-      id: "dem1",
-      url: "/digital-elevation-model-topographic-map-with-conto.jpg",
-      title: "DEM - Topographic Analysis",
-      type: "DEM",
-    },
-    {
       id: "mine1",
       url: "/open-pit-copper-mine-aerial-view-with-terraced-lev.jpg",
       title: "Open Pit Mine - Aerial View",
-      type: "Mine",
-    },
-    {
-      id: "dem2",
-      url: "/3d-terrain-model-showing-elevation-changes-and-slo.jpg",
-      title: "DEM - Slope Analysis",
-      type: "DEM",
-    },
-    {
-      id: "mine2",
-      url: "/mining-quarry-with-heavy-equipment-and-access-road.jpg",
-      title: "Mining Quarry - Ground Level",
       type: "Mine",
     },
   ]
 
   const handlePredict = async () => {
     setIsAnalyzing(true)
-
-    // Simulate analysis process
-    await new Promise((resolve) => setTimeout(resolve, 3000))
-
+    await new Promise((resolve) => setTimeout(resolve, 3000)) // fake delay
     setIsAnalyzing(false)
     setAnalysisComplete(true)
   }
@@ -63,6 +41,15 @@ export default function MiningSafetyPlatform() {
     setSelectedImage(imageUrl)
   }
 
+  // Example graph data (hardcoded)
+  const riskData = [
+    { year: 2018, incidents: 12, severity: 30 },
+    { year: 2019, incidents: 18, severity: 45 },
+    { year: 2020, incidents: 9, severity: 20 },
+    { year: 2021, incidents: 14, severity: 35 },
+    { year: 2022, incidents: 20, severity: 50 },
+  ]
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -74,6 +61,8 @@ export default function MiningSafetyPlatform() {
                 <Shield className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
+                <h1 className="text-xl font-bold text-foreground">Mining Safety Platform</h1>
+                <p className="text-sm text-muted-foreground">AI-Powered Hazard Detection</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -90,13 +79,6 @@ export default function MiningSafetyPlatform() {
         {!analysisComplete ? (
           /* Upload and Analysis Section */
           <div className="max-w-6xl mx-auto space-y-8">
-            <div className="text-center space-y-4">
-              <h2 className="text-3xl font-bold text-balance">Advanced Mining Safety Analysis</h2>
-              <p className="text-lg text-muted-foreground text-balance max-w-2xl mx-auto">
-                Select a mining image below to analyze potential hazards and safety risks using AI-powered analysis
-              </p>
-            </div>
-
             <Card className="border-border/50">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -137,24 +119,6 @@ export default function MiningSafetyPlatform() {
             </Card>
 
             {selectedImage && (
-              <Card className="border-primary/20 bg-primary/5 animate-scale-in">
-                <CardHeader>
-                  <CardTitle>Selected Image</CardTitle>
-                  <CardDescription>Ready for safety analysis</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="aspect-[16/10] bg-muted rounded-lg overflow-hidden mb-4">
-                    <img
-                      src={selectedImage || "/placeholder.svg"}
-                      alt="Selected mining data"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {selectedImage && (
               <div className="flex justify-center animate-fade-in">
                 <Button
                   onClick={handlePredict}
@@ -186,112 +150,69 @@ export default function MiningSafetyPlatform() {
                       <span className="text-sm text-muted-foreground">Processing...</span>
                     </div>
                     <Progress value={75} className="h-2" />
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
-                        DEM Processing Complete
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-warning rounded-full animate-pulse"></div>
-                        Analyzing Slope Stability
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-muted-foreground rounded-full"></div>
-                        Generating Risk Maps
-                      </div>
-                    </div>
                   </div>
                 </CardContent>
               </Card>
             )}
           </div>
         ) : (
-          /* Results Dashboard */
-          <div className="space-y-8 animate-slide-up">
-            {/* Alert Banner */}
-            <Alert className="border-destructive/20 bg-destructive/5">
-              <AlertTriangle className="h-4 w-4 text-destructive animate-pulse-danger" />
-              <AlertTitle className="text-destructive">High Risk Areas Detected</AlertTitle>
-              <AlertDescription className="text-destructive/80">
-                Critical safety hazards identified in sectors 2, 5, and 7. Immediate attention required.
-              </AlertDescription>
-            </Alert>
+          /* Show result image + graphs */
+          <div className="space-y-6 animate-fade-in text-center">
+            <h2 className="text-2xl font-bold">Analysis Complete</h2>
 
-            {/* Action Bar */}
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold">Safety Analysis Results</h2>
-                <p className="text-muted-foreground">Generated on {new Date().toLocaleDateString()}</p>
-              </div>
-              <div className="flex gap-3">
-                <Button variant="outline" onClick={resetAnalysis}>
-                  New Analysis
-                </Button>
-                <Button>Export Report</Button>
-              </div>
+            {/* Hardcoded Result Image */}
+            <div className="aspect-[16/10] max-w-4xl mx-auto rounded-lg overflow-hidden shadow-lg">
+              <img
+                src="/mine.jpg"
+                alt="Analysis Result"
+                className="w-full h-full object-cover"
+              />
             </div>
 
-            {/* Main Dashboard */}
-            <Tabs defaultValue="heatmap" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-4 bg-muted/50">
-                <TabsTrigger value="heatmap">Risk Heatmap</TabsTrigger>
-                <TabsTrigger value="metrics">Safety Metrics</TabsTrigger>
-                <TabsTrigger value="analysis">Risk Analysis</TabsTrigger>
-                <TabsTrigger value="recommendations">Actions</TabsTrigger>
-              </TabsList>
+            {/* Graph Section */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Incident Trends</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <LineChart data={riskData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="year" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Line type="monotone" dataKey="incidents" stroke="#8884d8" />
+                      <Line type="monotone" dataKey="severity" stroke="#82ca9d" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
 
-              <TabsContent value="heatmap" className="space-y-6">
-                <HeatmapVisualization selectedImage={selectedImage} />
-              </TabsContent>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Risk Distribution</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <BarChart data={riskData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="year" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="incidents" fill="#8884d8" />
+                      <Bar dataKey="severity" fill="#82ca9d" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            </div>
 
-              <TabsContent value="metrics" className="space-y-6">
-                <SafetyMetrics />
-              </TabsContent>
-
-              <TabsContent value="analysis" className="space-y-6">
-                <RiskAnalysisCharts />
-              </TabsContent>
-
-              <TabsContent value="recommendations" className="space-y-6">
-                <div className="grid gap-6">
-                  <Card className="border-destructive/20">
-                    <CardHeader>
-                      <CardTitle className="text-destructive flex items-center gap-2">
-                        <AlertTriangle className="w-5 h-5" />
-                        Critical Actions Required
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-3">
-                        <div className="flex items-start gap-3 p-3 bg-destructive/5 rounded-lg">
-                          <div className="w-2 h-2 bg-destructive rounded-full mt-2"></div>
-                          <div>
-                            <p className="font-medium">Sector 2: Slope Instability</p>
-                            <p className="text-sm text-muted-foreground">
-                              Immediate evacuation and reinforcement required
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-3 p-3 bg-warning/5 rounded-lg">
-                          <div className="w-2 h-2 bg-warning rounded-full mt-2"></div>
-                          <div>
-                            <p className="font-medium">Sector 5: Water Accumulation</p>
-                            <p className="text-sm text-muted-foreground">Install drainage systems within 48 hours</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-3 p-3 bg-destructive/5 rounded-lg">
-                          <div className="w-2 h-2 bg-destructive rounded-full mt-2"></div>
-                          <div>
-                            <p className="font-medium">Sector 7: Equipment Access Risk</p>
-                            <p className="text-sm text-muted-foreground">Restrict heavy machinery access immediately</p>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-            </Tabs>
+            <Button variant="outline" onClick={resetAnalysis}>
+              New Analysis
+            </Button>
           </div>
         )}
       </div>
