@@ -88,7 +88,7 @@ export default function MiningSafetyPlatform() {
                 <CardDescription>Select an image to analyze for safety hazards</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-10 lg:grid-cols-4 gap-4 justify-center align-middle">
                   {sampleImages.map((image) => (
                     <Card
                       key={image.id}
@@ -161,7 +161,7 @@ export default function MiningSafetyPlatform() {
             <h2 className="text-2xl font-bold">Analysis Complete</h2>
 
             {/* Hardcoded Result Image */}
-            <div className="aspect-[16/10] max-w-4xl mx-auto rounded-lg overflow-hidden shadow-lg">
+            <div className="aspect-[16/10] max-w-3xl mx-auto rounded-lg overflow-hidden shadow-lg">
               <img
                 src="/mine.jpg"
                 alt="Analysis Result"
